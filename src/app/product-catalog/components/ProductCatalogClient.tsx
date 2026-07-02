@@ -163,22 +163,22 @@ export default function ProductCatalogClient() {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Toolbar */}
         <div
-          className="px-5 py-4 border-b flex-shrink-0"
+          className="px-6 py-4 border-b flex-shrink-0"
           style={{ borderColor: 'var(--border)', background: 'var(--background)' }}
         >
           <div className="flex items-center gap-3 flex-wrap">
             {/* Mobile filter button */}
             <button
-              className="lg:hidden flex items-center gap-2 px-3 py-2 rounded-xl border text-sm font-medium transition-all duration-150 hover:bg-muted"
-              style={{ borderColor: 'var(--border)', color: 'var(--foreground)' }}
+              className="lg:hidden flex items-center gap-2 px-4 py-2.5 border tracking-editorial transition-all duration-150 hover:bg-muted"
+              style={{ borderColor: 'var(--border)', color: 'var(--foreground)', fontSize: '0.65rem' }}
               onClick={() => setFiltersOpen(true)}
             >
-              <Icon name="AdjustmentsHorizontalIcon" size={16} />
-              Filters
+              <Icon name="AdjustmentsHorizontalIcon" size={14} />
+              Refine
               {activeFilterCount > 0 && (
                 <span
-                  className="w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center"
-                  style={{ background: 'var(--accent)', color: 'var(--accent-foreground)' }}
+                  className="w-4 h-4 text-xs font-bold flex items-center justify-center"
+                  style={{ background: 'var(--foreground)', color: 'var(--background)', fontSize: '0.55rem' }}
                 >
                   {activeFilterCount}
                 </span>
@@ -194,8 +194,8 @@ export default function ProductCatalogClient() {
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as SortOption)}
-              className="input-field py-2 text-sm w-auto min-w-[160px]"
-              style={{ background: 'var(--muted)' }}
+              className="input-field py-2.5 text-xs w-auto min-w-[160px]"
+              style={{ background: 'var(--muted)', borderRadius: '0' }}
             >
               <option value="featured">Featured</option>
               <option value="price-asc">Price: Low to High</option>
@@ -206,16 +206,16 @@ export default function ProductCatalogClient() {
 
             {/* Cart button */}
             <button
-              className="relative flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm transition-all duration-150 active:scale-95"
-              style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}
+              className="relative flex items-center gap-2 px-5 py-2.5 tracking-editorial transition-all duration-150 active:scale-95"
+              style={{ background: 'var(--foreground)', color: 'var(--background)', fontSize: '0.65rem' }}
               onClick={() => setCartOpen(true)}
             >
-              <Icon name="ShoppingCartIcon" size={16} />
-              Cart
+              <Icon name="ShoppingBagIcon" size={14} />
+              Bag
               {cartCount > 0 && (
                 <span
-                  className="w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center"
-                  style={{ background: 'var(--accent)', color: 'var(--accent-foreground)' }}
+                  className="w-4 h-4 text-xs font-bold flex items-center justify-center"
+                  style={{ background: 'var(--background)', color: 'var(--foreground)', fontSize: '0.55rem' }}
                 >
                   {cartCount}
                 </span>
@@ -226,36 +226,36 @@ export default function ProductCatalogClient() {
           {/* Active filter chips */}
           {(activeFilterCount > 0 || search) && (
             <div className="flex items-center gap-2 mt-3 flex-wrap">
-              <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
-                {filtered.length} results
+              <span className="tracking-editorial" style={{ color: 'var(--muted-foreground)', fontSize: '0.6rem' }}>
+                {filtered.length} pieces
               </span>
               {filters.categories.map((cat) => (
                 <button
                   key={`chip-cat-${cat}`}
                   onClick={() => removeCategory(cat)}
-                  className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-150 hover:opacity-80"
-                  style={{ background: 'rgba(232,168,124,0.15)', color: 'var(--accent)' }}
+                  className="flex items-center gap-1 px-2.5 py-1 tracking-editorial transition-all duration-150 hover:opacity-70"
+                  style={{ background: 'var(--muted)', color: 'var(--foreground)', fontSize: '0.6rem' }}
                 >
                   {cat}
-                  <Icon name="XMarkIcon" size={10} />
+                  <Icon name="XMarkIcon" size={9} />
                 </button>
               ))}
               {filters.brands.map((brand) => (
                 <button
                   key={`chip-brand-${brand}`}
                   onClick={() => removeBrand(brand)}
-                  className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-150 hover:opacity-80"
-                  style={{ background: 'var(--muted)', color: 'var(--muted-foreground)' }}
+                  className="flex items-center gap-1 px-2.5 py-1 tracking-editorial transition-all duration-150 hover:opacity-70"
+                  style={{ background: 'var(--muted)', color: 'var(--muted-foreground)', fontSize: '0.6rem' }}
                 >
                   {brand}
-                  <Icon name="XMarkIcon" size={10} />
+                  <Icon name="XMarkIcon" size={9} />
                 </button>
               ))}
               {activeFilterCount > 0 && (
                 <button
                   onClick={clearAllFilters}
-                  className="text-xs font-medium transition-colors duration-150"
-                  style={{ color: 'var(--danger)' }}
+                  className="tracking-editorial transition-colors duration-150 hover:opacity-60"
+                  style={{ color: 'var(--muted-foreground)', fontSize: '0.6rem' }}
                 >
                   Clear all
                 </button>

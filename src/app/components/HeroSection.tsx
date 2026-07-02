@@ -4,212 +4,235 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Icon from '@/components/ui/AppIcon';
 
-const SAVINGS_TARGET = 18420;
+const EDITORIAL_IMAGES = [
+  {
+    id: 'hero-1',
+    label: 'New Collection',
+    desc: 'SS 2026',
+    bg: '#e8e5e0',
+  },
+  {
+    id: 'hero-2',
+    label: 'Essentials',
+    desc: 'Timeless Pieces',
+    bg: '#d4d0ca',
+  },
+];
 
-function AnimatedCounter({ target, duration = 2000 }: { target: number; duration?: number }) {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    let startTime: number;
-    let animFrame: number;
-
-    const step = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.floor(eased * target));
-      if (progress < 1) animFrame = requestAnimationFrame(step);
-    };
-
-    const timeout = setTimeout(() => {
-      animFrame = requestAnimationFrame(step);
-    }, 500);
-
-    return () => {
-      clearTimeout(timeout);
-      cancelAnimationFrame(animFrame);
-    };
-  }, [target, duration]);
-
-  return (
-    <span className="font-mono-nums">
-      ${count.toLocaleString()}
-    </span>
-  );
-}
-
-const FLOATING_PRODUCTS = [
-  { id: 'float-1', name: 'AirPods Pro', price: '$249', emoji: '🎧', delay: '0ms', top: '15%', left: '5%' },
-  { id: 'float-2', name: 'Linen Blazer', price: '$185', emoji: '🧥', delay: '200ms', top: '55%', left: '2%' },
-  { id: 'float-3', name: 'Le Creuset', price: '$389', emoji: '🍳', delay: '400ms', top: '30%', right: '4%' },
-  { id: 'float-4', name: 'Manduka Mat', price: '$120', emoji: '🧘', delay: '600ms', top: '70%', right: '6%' },
+const CATEGORIES = [
+  { id: 'cat-women', label: "Women\'s", sub: 'Dresses · Tops · Coats', href: '/product-catalog' },
+  { id: 'cat-men', label: "Men\'s", sub: 'Shirts · Jackets · Trousers', href: '/product-catalog' },
+  { id: 'cat-new', label: 'New Arrivals', sub: 'Just Landed', href: '/product-catalog' },
+  { id: 'cat-sale', label: 'Sale', sub: 'Up to 50% Off', href: '/product-catalog' },
 ];
 
 export default function HeroSection() {
   const [mounted, setMounted] = useState(false);
+  const [activeImg, setActiveImg] = useState(0);
 
   useEffect(() => {
     setMounted(true);
+    const interval = setInterval(() => {
+      setActiveImg((prev) => (prev + 1) % EDITORIAL_IMAGES.length);
+    }, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
-    <section className="gradient-hero relative overflow-hidden" style={{ paddingTop: '120px', paddingBottom: '80px', minHeight: '100vh', display: 'flex', alignItems: 'center' }}>
-      {/* Background blobs */}
-      <div
-        className="absolute top-20 right-1/4 w-96 h-96 rounded-full opacity-20 blur-3xl pointer-events-none"
-        style={{ background: 'var(--accent)' }}
-      />
-      <div
-        className="absolute bottom-20 left-1/4 w-80 h-80 rounded-full opacity-10 blur-3xl pointer-events-none"
-        style={{ background: 'var(--primary)' }}
-      />
-
-      {/* Floating product cards — desktop only */}
-      {mounted && FLOATING_PRODUCTS.map((item) => (
+    <section
+      className="gradient-hero relative overflow-hidden"
+      style={{ paddingTop: '72px', minHeight: '100vh' }}
+    >
+      {/* Full-bleed editorial hero */}
+      <div className="relative w-full" style={{ height: 'calc(100vh - 72px)' }}>
+        {/* Editorial image placeholder */}
         <div
-          key={item.id}
-          className="hidden xl:flex absolute glass-card rounded-2xl px-4 py-3 items-center gap-3 shadow-card animate-fade-in"
-          style={{
-            top: item.top,
-            left: item.left,
-            right: item.right,
-            animationDelay: item.delay,
-            zIndex: 1,
-          }}
+          className="absolute inset-0 transition-all duration-1000"
+          style={{ background: mounted ? EDITORIAL_IMAGES[activeImg].bg : EDITORIAL_IMAGES[0].bg }}
         >
-          <span className="text-2xl">{item.emoji}</span>
-          <div>
-            <p className="text-xs font-semibold" style={{ color: 'var(--foreground)' }}>{item.name}</p>
-            <p className="text-xs price-tag line-through" style={{ color: 'var(--muted-foreground)' }}>{item.price}</p>
-          </div>
-          <span className="badge badge-success text-xs ml-1">Saved!</span>
+          {/* Subtle texture overlay */}
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: 'radial-gradient(circle at 20% 80%, rgba(0,0,0,0.04) 0%, transparent 60%), radial-gradient(circle at 80% 20%, rgba(0,0,0,0.03) 0%, transparent 60%)',
+            }}
+          />
+          {/* Editorial grid lines */}
+          <div
+            className="absolute inset-0 opacity-5"
+            style={{
+              backgroundImage: 'linear-gradient(to right, #000 1px, transparent 1px), linear-gradient(to bottom, #000 1px, transparent 1px)',
+              backgroundSize: '80px 80px',
+            }}
+          />
         </div>
-      ))}
 
-      <div className="max-w-screen-xl mx-auto px-6 w-full relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Left: Copy */}
-          <div className="flex flex-col gap-8">
-            <div className="flex items-center gap-2">
-              <span className="badge badge-accent">
-                <Icon name="SparklesIcon" size={12} />
-                Financial Wellness
-              </span>
-              <span className="badge badge-success">
-                <Icon name="HeartIcon" size={12} />
-                Guilt-Free Shopping
-              </span>
-            </div>
-
-            <div>
-              <h1 className="text-hero-xl font-extrabold text-balance" style={{ color: 'var(--foreground)', letterSpacing: '-0.03em' }}>
-                Feel the Joy of{' '}
-                <span style={{ color: 'var(--accent)' }}>Shopping.</span>
-                <br />
-                Spend Nothing.
-              </h1>
-              <p className="mt-6 text-lg leading-relaxed" style={{ color: 'var(--muted-foreground)', maxWidth: '500px' }}>
-                Experience the excitement of browsing, carting, and "buying" your favourite products — while your real wallet stays untouched.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-4">
-              <Link href="/dashboard" className="btn-primary text-base px-8 py-4">
-                <Icon name="ShoppingBagIcon" size={18} />
-                Start Shopping Free
-              </Link>
-              <a href="#how-it-works" className="btn-outline text-base px-8 py-4">
-                <Icon name="PlayCircleIcon" size={18} />
-                How It Works
-              </a>
-            </div>
-
-            <div className="flex items-center gap-6 pt-2">
-              <div className="flex -space-x-2">
-                {['S', 'M', 'A', 'R'].map((initial, i) => (
-                  <div
-                    key={`avatar-${initial}-${i}`}
-                    className="w-9 h-9 rounded-full border-2 flex items-center justify-center text-xs font-bold"
-                    style={{
-                      background: i % 2 === 0 ? 'var(--accent)' : 'var(--primary)',
-                      color: i % 2 === 0 ? 'var(--accent-foreground)' : 'var(--primary-foreground)',
-                      borderColor: 'var(--background)',
-                    }}
-                  >
-                    {initial}
-                  </div>
-                ))}
-              </div>
-              <div>
-                <div className="flex items-center gap-1">
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <Icon key={`star-${s}`} name="StarIcon" size={14} className="star-filled" />
-                  ))}
-                </div>
-                <p className="text-sm mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
-                  <strong style={{ color: 'var(--foreground)' }}>12,400+</strong> people saving money
+        {/* Hero content overlay */}
+        <div className="absolute inset-0 flex flex-col justify-end pb-16 px-8 md:px-16 lg:px-24">
+          <div className="max-w-screen-xl mx-auto w-full">
+            <div className="grid lg:grid-cols-2 gap-8 items-end">
+              {/* Left: Main headline */}
+              <div className={`transition-all duration-700 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+                <p className="tracking-editorial mb-4" style={{ color: 'var(--muted-foreground)', fontSize: '0.65rem' }}>
+                  {EDITORIAL_IMAGES[activeImg].desc}
                 </p>
+                <h1 className="text-hero-xl mb-6" style={{ color: 'var(--foreground)' }}>
+                  {EDITORIAL_IMAGES[activeImg].label === 'New Collection' ? (
+                    <>
+                      The New<br />
+                      <em>Collection</em>
+                    </>
+                  ) : (
+                    <>
+                      Timeless<br />
+                      <em>Essentials</em>
+                    </>
+                  )}
+                </h1>
+                <div className="flex items-center gap-4">
+                  <Link href="/product-catalog" className="btn-primary">
+                    Explore Now
+                  </Link>
+                  <Link href="/product-catalog" className="btn-outline">
+                    View All
+                  </Link>
+                </div>
+              </div>
+
+              {/* Right: Slide indicators */}
+              <div className="flex justify-end items-end gap-2">
+                {EDITORIAL_IMAGES.map((_, i) => (
+                  <button
+                    key={`hero-dot-${i}`}
+                    onClick={() => setActiveImg(i)}
+                    className="transition-all duration-300"
+                    style={{
+                      width: i === activeImg ? '32px' : '8px',
+                      height: '2px',
+                      background: i === activeImg ? 'var(--foreground)' : 'rgba(0,0,0,0.25)',
+                    }}
+                  />
+                ))}
               </div>
             </div>
           </div>
+        </div>
+      </div>
 
-          {/* Right: Savings dashboard preview */}
-          <div className="flex justify-center lg:justify-end">
-            <div className="w-full max-w-md">
-              {/* Main savings card */}
-              <div
-                className="gradient-savings rounded-3xl p-8 shadow-primary-glow relative overflow-hidden"
+      {/* Category strip */}
+      <div
+        className="border-t border-b"
+        style={{ borderColor: 'var(--border)', background: 'var(--background)' }}
+      >
+        <div className="max-w-screen-xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 divide-x" style={{ borderColor: 'var(--border)' }}>
+            {CATEGORIES.map((cat) => (
+              <Link
+                key={cat.id}
+                href={cat.href}
+                className="group px-8 py-8 flex flex-col gap-1 transition-all duration-300 hover:bg-muted"
               >
-                <div
-                  className="absolute top-0 right-0 w-48 h-48 rounded-full opacity-10 -translate-y-1/4 translate-x-1/4"
-                  style={{ background: 'var(--accent)' }}
+                <span
+                  className="font-display text-2xl transition-all duration-300"
+                  style={{ color: 'var(--foreground)', fontStyle: 'italic', fontWeight: 300 }}
+                >
+                  {cat.label}
+                </span>
+                <span className="tracking-editorial" style={{ color: 'var(--muted-foreground)', fontSize: '0.6rem' }}>
+                  {cat.sub}
+                </span>
+                <Icon
+                  name="ArrowRightIcon"
+                  size={14}
+                  className="mt-2 transition-transform duration-300 group-hover:translate-x-1"
+                  style={{ color: 'var(--muted-foreground)' } as React.CSSProperties}
                 />
-                <p className="text-sm font-medium mb-2 opacity-70" style={{ color: 'var(--primary-foreground)' }}>
-                  Total Saved This Year
-                </p>
-                <div className="text-5xl font-extrabold mb-1 font-mono-nums" style={{ color: 'var(--primary-foreground)' }}>
-                  {mounted ? <AnimatedCounter target={SAVINGS_TARGET} /> : '$0'}
-                </div>
-                <p className="text-sm opacity-60 mb-6" style={{ color: 'var(--primary-foreground)' }}>
-                  by not impulse buying
-                </p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
 
-                <div className="grid grid-cols-3 gap-4">
-                  {[
-                    { label: 'Orders', value: '47', icon: 'ShoppingBagIcon' },
-                    { label: 'Day Streak', value: '14', icon: 'FireIcon' },
-                    { label: 'Wishlisted', value: '83', icon: 'HeartIcon' },
-                  ].map((stat) => (
-                    <div
-                      key={`hero-stat-${stat.label}`}
-                      className="rounded-2xl p-3 text-center"
-                      style={{ background: 'rgba(255,255,255,0.1)' }}
-                    >
-                      <Icon name={stat.icon as Parameters<typeof Icon>[0]['name']} size={18} className="mx-auto mb-1 opacity-80" style={{ color: 'var(--primary-foreground)' } as React.CSSProperties} />
-                      <div className="text-xl font-bold font-mono-nums" style={{ color: 'var(--primary-foreground)' }}>{stat.value}</div>
-                      <div className="text-xs opacity-60" style={{ color: 'var(--primary-foreground)' }}>{stat.label}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+      {/* Editorial feature section */}
+      <div className="max-w-screen-xl mx-auto px-8 md:px-16 py-24">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          {/* Left: Text */}
+          <div>
+            <p className="tracking-editorial mb-6" style={{ color: 'var(--muted-foreground)', fontSize: '0.65rem' }}>
+              Our Philosophy
+            </p>
+            <h2 className="font-display mb-8" style={{ fontSize: 'clamp(2.5rem, 4vw, 4rem)', fontWeight: 300, lineHeight: 1.1, color: 'var(--foreground)' }}>
+              Crafted for the<br />
+              <em>modern wardrobe</em>
+            </h2>
+            <p className="text-sm leading-relaxed mb-8" style={{ color: 'var(--muted-foreground)', maxWidth: '420px', fontWeight: 300 }}>
+              ÉLAN is built on the belief that great style is effortless. Each piece is selected for its quality, versatility, and enduring appeal — fashion that transcends seasons.
+            </p>
+            <Link href="/product-catalog" className="btn-outline">
+              Discover the Collection
+            </Link>
+          </div>
 
-              {/* Mini product cards below */}
-              <div className="grid grid-cols-2 gap-3 mt-4">
-                {[
-                  { id: 'mini-1', name: 'Sony Headphones', price: '$349', saved: true, img: '🎧' },
-                  { id: 'mini-2', name: 'Linen Blazer', price: '$185', saved: true, img: '🧥' },
-                ].map((item) => (
-                  <div key={item.id} className="glass-card rounded-2xl p-4 flex items-center gap-3">
-                    <span className="text-2xl">{item.img}</span>
-                    <div className="min-w-0">
-                      <p className="text-xs font-semibold truncate" style={{ color: 'var(--foreground)' }}>{item.name}</p>
-                      <p className="text-xs price-tag line-through" style={{ color: 'var(--muted-foreground)' }}>{item.price}</p>
-                    </div>
-                    <Icon name="CheckCircleIcon" size={18} className="ml-auto flex-shrink-0" style={{ color: 'var(--success)' } as React.CSSProperties} />
-                  </div>
-                ))}
+          {/* Right: Editorial image placeholder grid */}
+          <div className="grid grid-cols-2 gap-4">
+            <div
+              className="aspect-[3/4] rounded-sm"
+              style={{ background: '#e8e5e0' }}
+            >
+              <div className="w-full h-full flex items-end p-4">
+                <p className="tracking-editorial" style={{ color: 'var(--muted-foreground)', fontSize: '0.6rem' }}>
+                  Women's Collection
+                </p>
               </div>
             </div>
+            <div className="flex flex-col gap-4">
+              <div
+                className="aspect-square rounded-sm"
+                style={{ background: '#d4d0ca' }}
+              >
+                <div className="w-full h-full flex items-end p-4">
+                  <p className="tracking-editorial" style={{ color: 'var(--muted-foreground)', fontSize: '0.6rem' }}>
+                    Men's Edit
+                  </p>
+                </div>
+              </div>
+              <div
+                className="aspect-square rounded-sm"
+                style={{ background: '#c8c4be' }}
+              >
+                <div className="w-full h-full flex items-end p-4">
+                  <p className="tracking-editorial" style={{ color: 'var(--muted-foreground)', fontSize: '0.6rem' }}>
+                    Accessories
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Brand values strip */}
+      <div
+        className="border-t py-12"
+        style={{ borderColor: 'var(--border)', background: 'var(--secondary)' }}
+      >
+        <div className="max-w-screen-xl mx-auto px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            {[
+              { label: 'Free Shipping', sub: 'On orders over $150' },
+              { label: 'Easy Returns', sub: '30-day return policy' },
+              { label: 'Sustainably Made', sub: 'Ethical production' },
+              { label: 'Premium Quality', sub: 'Curated materials' },
+            ].map((item) => (
+              <div key={`value-${item.label}`} className="flex flex-col gap-2">
+                <p className="font-display text-lg" style={{ color: 'var(--foreground)', fontStyle: 'italic', fontWeight: 300 }}>
+                  {item.label}
+                </p>
+                <p className="tracking-editorial" style={{ color: 'var(--muted-foreground)', fontSize: '0.6rem' }}>
+                  {item.sub}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </div>

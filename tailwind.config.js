@@ -50,7 +50,8 @@ module.exports = {
         '3xl': 'calc(var(--radius) + 16px)',
       },
       fontFamily: {
-        sans: ['var(--font-plus-jakarta-sans)', 'sans-serif'],
+        sans: ['Inter', 'var(--font-plus-jakarta-sans)', 'sans-serif'],
+        display: ['Cormorant Garamond', 'Georgia', 'serif'],
         mono: ['DM Mono', 'monospace'],
       },
       animation: {

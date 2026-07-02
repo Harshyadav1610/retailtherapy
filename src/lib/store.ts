@@ -9,6 +9,11 @@ export interface CartItem {
   quantity: number;
 }
 
+export interface WishlistItem {
+  product: Product;
+  addedAt: string;
+}
+
 export interface FakeOrder {
   id: string;
   items: CartItem[];
@@ -23,6 +28,7 @@ export interface FakeOrder {
 interface StoreState {
   cart: CartItem[];
   wishlist: Product[];
+  wishlistItems: WishlistItem[];
   orders: FakeOrder[];
   totalSaved: number;
   streak: number;
@@ -31,6 +37,8 @@ interface StoreState {
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
   toggleWishlist: (product: Product) => void;
+  removeFromWishlist: (productId: string) => void;
+  moveToCart: (product: Product) => void;
   placeOrder: (items: CartItem[]) => FakeOrder;
   getCartTotal: () => number;
   getCartCount: () => number;
@@ -42,6 +50,7 @@ export const useStore = create<StoreState>()(
     (set, get) => ({
       cart: [],
       wishlist: [],
+      wishlistItems: [],
       orders: [],
       totalSaved: 2847.50,
       streak: 14,
@@ -85,12 +94,32 @@ export const useStore = create<StoreState>()(
       toggleWishlist: (product) => {
         set((state) => {
           const exists = state.wishlist.find((p) => p.id === product.id);
+          if (exists) {
+            return {
+              wishlist: state.wishlist.filter((p) => p.id !== product.id),
+              wishlistItems: state.wishlistItems.filter((wi) => wi.product.id !== product.id),
+            };
+          }
           return {
-            wishlist: exists
-              ? state.wishlist.filter((p) => p.id !== product.id)
-              : [...state.wishlist, product],
+            wishlist: [...state.wishlist, product],
+            wishlistItems: [
+              ...state.wishlistItems,
+              { product, addedAt: new Date().toISOString() },
+            ],
           };
         });
+      },
+
+      removeFromWishlist: (productId) => {
+        set((state) => ({
+          wishlist: state.wishlist.filter((p) => p.id !== productId),
+          wishlistItems: state.wishlistItems.filter((wi) => wi.product.id !== productId),
+        }));
+      },
+
+      moveToCart: (product) => {
+        get().removeFromWishlist(product.id);
+        get().addToCart(product);
       },
 
       placeOrder: (items) => {

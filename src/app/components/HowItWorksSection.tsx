@@ -1,40 +1,32 @@
 'use client';
 
 import React from 'react';
-import Icon from '@/components/ui/AppIcon';
+import Link from 'next/link';
 
 const STEPS = [
   {
     id: 'step-1',
     number: '01',
-    icon: 'UserPlusIcon',
-    title: 'Create Your Free Account',
-    description: 'Sign up in seconds. No credit card required, ever. Just your email and a password.',
-    color: 'var(--accent)',
+    title: 'Discover',
+    description: 'Browse our curated collections. Filter by category, occasion, or aesthetic.',
   },
   {
     id: 'step-2',
     number: '02',
-    icon: 'MagnifyingGlassIcon',
-    title: 'Browse & Discover Products',
-    description: 'Explore 60+ products across 10 categories. Search, filter, and find exactly what catches your eye.',
-    color: 'var(--primary)',
+    title: 'Select',
+    description: 'Choose your size and colour. Add to your wishlist or cart with a single click.',
   },
   {
     id: 'step-3',
     number: '03',
-    icon: 'ShoppingCartIcon',
-    title: 'Add to Cart & Checkout',
-    description: 'Fill your cart, apply fake coupons, enter a fake address. Experience the full checkout flow.',
-    color: 'var(--accent)',
+    title: 'Checkout',
+    description: 'Secure, seamless checkout. Free shipping on orders over $150.',
   },
   {
     id: 'step-4',
     number: '04',
-    icon: 'SparklesIcon',
-    title: 'Feel the Joy — Save the Money',
-    description: 'Confetti, order confirmation, tracking ID. The full satisfaction — and your real bank account stays full.',
-    color: 'var(--success)',
+    title: 'Wear',
+    description: 'Receive beautifully packaged pieces, ready to wear from day one.',
   },
 ];
 
@@ -44,66 +36,49 @@ export default function HowItWorksSection() {
       id="how-it-works"
       style={{ padding: '100px 0', background: 'var(--secondary)' }}
     >
-      <div className="max-w-screen-xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <span className="badge badge-muted mb-4 inline-flex">
-            <Icon name="MapIcon" size={12} />
+      <div className="max-w-screen-xl mx-auto px-8 md:px-16">
+        <div className="mb-16">
+          <p className="tracking-editorial mb-4" style={{ color: 'var(--muted-foreground)', fontSize: '0.65rem' }}>
             The Process
-          </span>
-          <h2 className="text-hero-md font-extrabold" style={{ color: 'var(--foreground)' }}>
-            How RetailTherapy{' '}
-            <span style={{ color: 'var(--accent)' }}>works</span>
-          </h2>
-          <p className="mt-4 text-lg max-w-xl mx-auto" style={{ color: 'var(--muted-foreground)' }}>
-            Four simple steps to a shopping experience that leaves your wallet intact.
           </p>
+          <h2
+            className="font-display"
+            style={{ fontSize: 'clamp(2rem, 3.5vw, 3.5rem)', fontWeight: 300, color: 'var(--foreground)' }}
+          >
+            How it <em>works</em>
+          </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-          {STEPS.map((step, index) => (
-            <div key={step.id} className="relative">
-              {/* Connector line */}
-              {index < STEPS.length - 1 && (
-                <div
-                  className="hidden xl:block absolute top-8 left-full w-full h-px z-0"
-                  style={{
-                    background: `linear-gradient(to right, ${step.color}, transparent)`,
-                    width: 'calc(100% - 32px)',
-                    left: '50%',
-                    opacity: 0.3,
-                  }}
-                />
-              )}
-
-              <div
-                className="card-base card-hover text-center relative z-10"
-                style={{ background: 'var(--card)' }}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-0 border-t" style={{ borderColor: 'var(--border)' }}>
+          {STEPS?.map((step, index) => (
+            <div
+              key={step?.id}
+              className="py-10 pr-8 border-b md:border-b-0 md:border-r last:border-r-0"
+              style={{ borderColor: 'var(--border)' }}
+            >
+              <span
+                className="font-mono-nums block mb-6"
+                style={{ color: 'var(--muted-foreground)', fontSize: '0.65rem' }}
               >
-                <div
-                  className="text-xs font-bold tracking-widest mb-4"
-                  style={{ color: 'var(--muted-foreground)' }}
-                >
-                  {step.number}
-                </div>
-                <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5"
-                  style={{ background: `${step.color}18` }}
-                >
-                  <Icon
-                    name={step.icon as Parameters<typeof Icon>[0]['name']}
-                    size={28}
-                    style={{ color: step.color } as React.CSSProperties}
-                  />
-                </div>
-                <h3 className="font-bold text-base mb-3" style={{ color: 'var(--foreground)' }}>
-                  {step.title}
-                </h3>
-                <p className="text-sm leading-relaxed" style={{ color: 'var(--muted-foreground)' }}>
-                  {step.description}
-                </p>
-              </div>
+                {step?.number}
+              </span>
+              <h3
+                className="font-display mb-3"
+                style={{ fontSize: '1.75rem', fontWeight: 300, color: 'var(--foreground)', fontStyle: 'italic' }}
+              >
+                {step?.title}
+              </h3>
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--muted-foreground)', fontWeight: 300 }}>
+                {step?.description}
+              </p>
             </div>
           ))}
+        </div>
+
+        <div className="mt-16 text-center">
+          <Link href="/product-catalog" className="btn-primary">
+            Start Shopping
+          </Link>
         </div>
       </div>
     </section>
