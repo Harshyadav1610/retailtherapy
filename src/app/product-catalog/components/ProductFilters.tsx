@@ -12,7 +12,7 @@ interface ProductFiltersProps {
 }
 
 const RATINGS = [4.5, 4.0, 3.5, 3.0];
-const BADGES = ['New', 'Sale', 'Popular', 'Limited'];
+const BADGES = ['New Arrival', 'Bestseller', 'Sale', 'Limited'];
 const PRICE_PRESETS = [
   { label: 'Under $50', min: 0, max: 50 },
   { label: '$50 – $200', min: 50, max: 200 },

@@ -13,9 +13,9 @@ interface ProductCardProps {
 }
 
 const BADGE_STYLES: Record<string, { bg: string; color: string }> = {
-  New: { bg: 'rgba(59,130,246,0.15)', color: '#3b82f6' },
+  'New Arrival': { bg: 'rgba(59,130,246,0.15)', color: '#3b82f6' },
   Sale: { bg: 'rgba(239,68,68,0.15)', color: 'var(--danger)' },
-  Popular: { bg: 'rgba(232,168,124,0.2)', color: 'var(--accent)' },
+  Bestseller: { bg: 'rgba(232,168,124,0.2)', color: 'var(--accent)' },
   Limited: { bg: 'rgba(139,92,246,0.15)', color: '#8b5cf6' },
 };
 
