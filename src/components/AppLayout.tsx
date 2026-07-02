@@ -6,13 +6,14 @@ import { usePathname } from 'next/navigation';
 import AppLogo from '@/components/ui/AppLogo';
 import Icon from '@/components/ui/AppIcon';
 import { useTheme } from '@/components/ThemeProvider';
+import { useStore } from '@/lib/store';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: 'HomeIcon' },
   { href: '/product-catalog', label: 'Shop', icon: 'ShoppingBagIcon' },
   { href: '/dashboard#orders', label: 'Orders', icon: 'ClipboardDocumentListIcon' },
   { href: '/dashboard#analytics', label: 'Analytics', icon: 'ChartBarIcon' },
-  { href: '/dashboard#wishlist', label: 'Wishlist', icon: 'HeartIcon' },
+  { href: '/wishlist', label: 'Wishlist', icon: 'HeartIcon' },
 ] as const;
 
 interface AppLayoutProps {
@@ -26,6 +27,10 @@ export default function AppLayout({ children, cartCount = 0, wishlistCount = 0 }
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const { theme, toggleTheme } = useTheme();
+  const storeWishlistCount = useStore((s) => s.wishlist.length);
+  const storeCartCount = useStore((s) => s.getCartCount());
+  const resolvedWishlistCount = storeWishlistCount || wishlistCount;
+  const resolvedCartCount = storeCartCount || cartCount;
 
   return (
     <div className="flex h-screen overflow-hidden" style={{ background: 'var(--background)' }}>
@@ -73,14 +78,14 @@ export default function AppLayout({ children, cartCount = 0, wishlistCount = 0 }
                 {sidebarOpen && (
                   <span className="text-sm">{item.label}</span>
                 )}
-                {!sidebarOpen && item.label === 'Wishlist' && wishlistCount > 0 && (
+                {!sidebarOpen && item.label === 'Wishlist' && resolvedWishlistCount > 0 && (
                   <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-accent" />
                 )}
                 {!sidebarOpen && item.label === 'Orders' && (
                   <span className="absolute top-1 right-1 w-2 h-2 rounded-full" style={{ background: 'var(--success)' }} />
                 )}
-                {sidebarOpen && item.label === 'Wishlist' && wishlistCount > 0 && (
-                  <span className="ml-auto badge badge-accent text-xs">{wishlistCount}</span>
+                {sidebarOpen && item.label === 'Wishlist' && resolvedWishlistCount > 0 && (
+                  <span className="ml-auto badge badge-accent text-xs">{resolvedWishlistCount}</span>
                 )}
               </Link>
             );
@@ -218,18 +223,34 @@ export default function AppLayout({ children, cartCount = 0, wishlistCount = 0 }
           </div>
 
           <div className="flex items-center gap-2 ml-auto">
+            {/* Wishlist */}
+            <Link
+              href="/wishlist"
+              className="relative p-2 rounded-xl transition-all duration-150 hover:bg-muted"
+            >
+              <Icon name="HeartIcon" size={20} className="text-muted-foreground" />
+              {resolvedWishlistCount > 0 && (
+                <span
+                  className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full text-xs font-bold flex items-center justify-center"
+                  style={{ background: '#e85d75', color: '#fff' }}
+                >
+                  {resolvedWishlistCount > 9 ? '9+' : resolvedWishlistCount}
+                </span>
+              )}
+            </Link>
+
             {/* Cart */}
             <Link
               href="/product-catalog"
               className="relative p-2 rounded-xl transition-all duration-150 hover:bg-muted"
             >
               <Icon name="ShoppingCartIcon" size={20} className="text-muted-foreground" />
-              {cartCount > 0 && (
+              {resolvedCartCount > 0 && (
                 <span
                   className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full text-xs font-bold flex items-center justify-center"
                   style={{ background: 'var(--accent)', color: 'var(--accent-foreground)' }}
                 >
-                  {cartCount}
+                  {resolvedCartCount}
                 </span>
               )}
             </Link>

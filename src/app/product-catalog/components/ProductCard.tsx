@@ -104,11 +104,12 @@ export default function ProductCard({ product, justAdded, onAdded }: ProductCard
         <button
           onClick={handleWishlist}
           className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${
-            wishlistAnimating ? 'scale-125' : 'scale-100'
+            wishlistAnimating ? 'scale-150' : 'scale-100'
           }`}
           style={{
-            background: isWishlisted ? 'rgba(232,93,117,0.15)' : 'rgba(255,255,255,0.9)',
+            background: isWishlisted ? 'rgba(232,93,117,0.2)' : 'rgba(255,255,255,0.9)',
             backdropFilter: 'blur(8px)',
+            boxShadow: isWishlisted ? '0 0 0 2px rgba(232,93,117,0.3)' : 'none',
           }}
           title={isWishlisted ? 'Remove from wishlist' : 'Save for later'}
         >
@@ -116,7 +117,7 @@ export default function ProductCard({ product, justAdded, onAdded }: ProductCard
             name="HeartIcon"
             size={15}
             variant={isWishlisted ? 'solid' : 'outline'}
-            style={{ color: isWishlisted ? '#e85d75' : 'var(--muted-foreground)' } as React.CSSProperties}
+            style={{ color: isWishlisted ? '#e85d75' : 'var(--muted-foreground)', transition: 'color 0.2s' } as React.CSSProperties}
           />
         </button>
 
