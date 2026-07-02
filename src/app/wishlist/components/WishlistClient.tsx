@@ -79,17 +79,23 @@ export default function WishlistClient() {
 
   return (
     <AppLayout cartCount={cartCount} wishlistCount={wishlist.length}>
-      <div className="p-5 lg:p-8 max-w-7xl mx-auto">
+      <div className="p-6 lg:p-10 max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+        <div className="flex items-end justify-between mb-10 flex-wrap gap-4">
           <div>
-            <h1 className="text-2xl font-bold" style={{ color: 'var(--foreground)' }}>
-              My Wishlist
+            <p className="tracking-editorial mb-2" style={{ color: 'var(--muted-foreground)', fontSize: '0.65rem' }}>
+              My Account
+            </p>
+            <h1
+              className="font-display"
+              style={{ fontSize: 'clamp(2rem, 3.5vw, 3rem)', fontWeight: 300, color: 'var(--foreground)', fontStyle: 'italic' }}
+            >
+              Saved Pieces
             </h1>
             {!isEmpty && (
-              <p className="text-sm mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
-                {wishlist.length} item{wishlist.length !== 1 ? 's' : ''} · Total value{' '}
-                <span className="font-semibold" style={{ color: 'var(--foreground)' }}>
+              <p className="text-xs mt-1" style={{ color: 'var(--muted-foreground)', fontWeight: 300 }}>
+                {wishlist.length} {wishlist.length !== 1 ? 'items' : 'item'} · Total value{' '}
+                <span className="font-medium price-tag" style={{ color: 'var(--foreground)' }}>
                   ${totalValue.toLocaleString()}
                 </span>
               </p>
@@ -98,10 +104,8 @@ export default function WishlistClient() {
           {!isEmpty && (
             <Link
               href="/product-catalog"
-              className="flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm transition-all duration-150 active:scale-95"
-              style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}
+              className="btn-outline text-xs"
             >
-              <Icon name="ShoppingBagIcon" size={16} />
               Continue Shopping
             </Link>
           )}
@@ -109,49 +113,40 @@ export default function WishlistClient() {
 
         {/* Empty state */}
         {isEmpty ? (
-          <div className="flex flex-col items-center justify-center py-24 gap-6 text-center">
+          <div className="flex flex-col items-center justify-center py-32 gap-8 text-center">
             <div
-              className="w-28 h-28 rounded-3xl flex items-center justify-center"
+              className="w-20 h-20 flex items-center justify-center"
               style={{ background: 'var(--muted)' }}
             >
               <svg
-                width="56"
-                height="56"
-                viewBox="0 0 56 56"
+                width="32"
+                height="32"
+                viewBox="0 0 32 32"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
                 aria-hidden="true"
               >
                 <path
-                  d="M28 48S8 34 8 20a12 12 0 0 1 20-9 12 12 0 0 1 20 9c0 14-20 28-20 28z"
-                  fill="rgba(232,93,117,0.12)"
-                  stroke="#e85d75"
-                  strokeWidth="2"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M20 26l4 4 8-8"
-                  stroke="rgba(232,93,117,0.5)"
-                  strokeWidth="2"
-                  strokeLinecap="round"
+                  d="M16 28S4 20 4 12a8 8 0 0 1 12-6.9A8 8 0 0 1 28 12c0 8-12 16-12 16z"
+                  fill="none"
+                  stroke="var(--muted-foreground)"
+                  strokeWidth="1.5"
                   strokeLinejoin="round"
                 />
               </svg>
             </div>
             <div>
-              <h2 className="text-xl font-bold mb-2" style={{ color: 'var(--foreground)' }}>
-                Your wishlist is empty
-              </h2>
-              <p className="text-sm max-w-xs mx-auto mb-6" style={{ color: 'var(--muted-foreground)' }}>
-                Browse our catalog and tap the heart icon on any product to save it here for later.
-              </p>
-              <Link
-                href="/product-catalog"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-150 active:scale-95"
-                style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}
+              <h2
+                className="font-display mb-3"
+                style={{ fontSize: '1.75rem', fontWeight: 300, color: 'var(--foreground)', fontStyle: 'italic' }}
               >
-                <Icon name="ShoppingBagIcon" size={16} />
-                Start Shopping
+                Nothing saved yet
+              </h2>
+              <p className="text-sm mb-8" style={{ color: 'var(--muted-foreground)', fontWeight: 300, maxWidth: '280px', margin: '0 auto 2rem' }}>
+                Browse our collection and tap the heart icon to save pieces you love.
+              </p>
+              <Link href="/product-catalog" className="btn-primary">
+                Explore Collection
               </Link>
             </div>
           </div>
@@ -159,30 +154,30 @@ export default function WishlistClient() {
           <>
             {/* Toolbar */}
             <div
-              className="flex items-center gap-3 flex-wrap mb-6 p-4 rounded-2xl border"
-              style={{ background: 'var(--card)', borderColor: 'var(--border)' }}
+              className="flex items-center gap-3 flex-wrap mb-8 border-b pb-6"
+              style={{ borderColor: 'var(--border)' }}
             >
               {/* Search */}
               <div className="relative flex-1 min-w-[200px]">
                 <Icon
                   name="MagnifyingGlassIcon"
-                  size={16}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                  size={14}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
                 />
                 <input
                   type="text"
-                  placeholder="Search wishlist..."
+                  placeholder="Search saved pieces..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="input-field pl-9 py-2 text-sm w-full"
-                  style={{ background: 'var(--muted)' }}
+                  className="input-field pl-10 py-3 text-xs w-full"
+                  style={{ borderRadius: '0' }}
                 />
                 {search && (
                   <button
                     onClick={() => setSearch('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 hover:opacity-60"
                   >
-                    <Icon name="XMarkIcon" size={14} className="text-muted-foreground" />
+                    <Icon name="XMarkIcon" size={12} className="text-muted-foreground" />
                   </button>
                 )}
               </div>
@@ -191,8 +186,8 @@ export default function WishlistClient() {
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value as WishlistSort)}
-                className="input-field py-2 text-sm w-auto min-w-[180px]"
-                style={{ background: 'var(--muted)' }}
+                className="input-field py-3 text-xs w-auto min-w-[180px]"
+                style={{ borderRadius: '0' }}
               >
                 <option value="date-desc">Date Added: Newest</option>
                 <option value="date-asc">Date Added: Oldest</option>
@@ -202,7 +197,7 @@ export default function WishlistClient() {
               </select>
 
               {search && (
-                <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
+                <span className="tracking-editorial" style={{ color: 'var(--muted-foreground)', fontSize: '0.6rem' }}>
                   {filtered.length} result{filtered.length !== 1 ? 's' : ''}
                 </span>
               )}
@@ -210,26 +205,29 @@ export default function WishlistClient() {
 
             {/* No search results */}
             {filtered.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 gap-4 text-center">
+              <div className="flex flex-col items-center justify-center py-20 gap-5 text-center">
                 <div
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center"
+                  className="w-14 h-14 flex items-center justify-center"
                   style={{ background: 'var(--muted)' }}
                 >
-                  <Icon name="MagnifyingGlassIcon" size={28} className="text-muted-foreground" />
+                  <Icon name="MagnifyingGlassIcon" size={20} className="text-muted-foreground" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-base mb-1" style={{ color: 'var(--foreground)' }}>
+                  <h3
+                    className="font-display mb-1"
+                    style={{ fontSize: '1.25rem', fontWeight: 300, color: 'var(--foreground)', fontStyle: 'italic' }}
+                  >
                     No matches found
                   </h3>
-                  <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
+                  <p className="text-xs" style={{ color: 'var(--muted-foreground)', fontWeight: 300 }}>
                     Try a different search term.
                   </p>
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {filtered.map((wi) => (
-                  <div key={wi.product.id} className="flex flex-col gap-2">
+                  <div key={wi.product.id} className="flex flex-col gap-3">
                     <ProductCard
                       product={wi.product}
                       justAdded={addedId === wi.product.id}
@@ -242,31 +240,31 @@ export default function WishlistClient() {
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleMoveToCart(wi)}
-                        className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold transition-all duration-150 active:scale-95"
+                        className="flex-1 flex items-center justify-center gap-1.5 py-2.5 tracking-editorial transition-all duration-150 active:scale-95"
                         style={{
-                          background: movedId === wi.product.id ? 'var(--success)' : 'var(--primary)',
-                          color: 'var(--primary-foreground)',
+                          background: movedId === wi.product.id ? 'var(--success)' : 'var(--foreground)',
+                          color: 'var(--background)',
+                          fontSize: '0.6rem',
                         }}
                       >
                         {movedId === wi.product.id ? (
                           <>
-                            <Icon name="CheckIcon" size={13} />
-                            Moved to Cart
+                            <Icon name="CheckIcon" size={11} />
+                            Moved to Bag
                           </>
                         ) : (
                           <>
-                            <Icon name="ShoppingCartIcon" size={13} />
-                            Move to Cart
+                            Move to Bag
                           </>
                         )}
                       </button>
                       <button
                         onClick={() => removeFromWishlist(wi.product.id)}
-                        className="flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-150 hover:bg-red-50 active:scale-95"
+                        className="flex items-center justify-center w-9 transition-all duration-150 hover:opacity-60 active:scale-95"
                         style={{ border: '1px solid var(--border)' }}
                         title="Remove from wishlist"
                       >
-                        <Icon name="TrashIcon" size={14} style={{ color: 'var(--danger)' } as React.CSSProperties} />
+                        <Icon name="TrashIcon" size={12} className="text-muted-foreground" />
                       </button>
                     </div>
                   </div>

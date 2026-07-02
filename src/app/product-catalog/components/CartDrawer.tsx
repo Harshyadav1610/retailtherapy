@@ -24,7 +24,7 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
   const [showSuccess, setShowSuccess] = useState(false);
 
   const subtotal = getCartTotal();
-  const shipping = subtotal > 0 ? (subtotal > 100 ? 0 : 9.99) : 0;
+  const shipping = subtotal > 0 ? (subtotal > 150 ? 0 : 12) : 0;
   const tax = subtotal * 0.08;
   const total = subtotal + shipping + tax;
 
@@ -44,34 +44,38 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
       {/* Overlay */}
       {open && (
         <div
-          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+          className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
           onClick={onClose}
         />
       )}
 
       {/* Drawer */}
       <div
-        className={`fixed inset-y-0 right-0 z-50 w-full max-w-md flex flex-col transition-transform duration-300 ${
+        className={`fixed inset-y-0 right-0 z-50 w-full max-w-md flex flex-col transition-transform duration-400 ${
           open ? 'translate-x-0' : 'translate-x-full'
         }`}
-        style={{ background: 'var(--card)', borderLeft: '1px solid var(--border)' }}
+        style={{ background: 'var(--background)', borderLeft: '1px solid var(--border)' }}
       >
         {/* Header */}
         <div
-          className="flex items-center justify-between px-5 py-4 border-b flex-shrink-0"
+          className="flex items-center justify-between px-6 py-5 border-b flex-shrink-0"
           style={{ borderColor: 'var(--border)' }}
         >
-          <div className="flex items-center gap-2">
-            <Icon name="ShoppingCartIcon" size={20} style={{ color: 'var(--accent)' } as React.CSSProperties} />
-            <span className="font-bold text-base" style={{ color: 'var(--foreground)' }}>
-              {checkoutStep === 'checkout' ? 'Checkout' : `Your Cart (${cart.length})`}
-            </span>
+          <div>
+            <p className="tracking-editorial" style={{ color: 'var(--muted-foreground)', fontSize: '0.6rem' }}>
+              {checkoutStep === 'checkout' ? 'Checkout' : 'Your Bag'}
+            </p>
+            {checkoutStep === 'cart' && cart.length > 0 && (
+              <p className="text-xs mt-0.5" style={{ color: 'var(--muted-foreground)', fontWeight: 300 }}>
+                {cart.length} {cart.length === 1 ? 'item' : 'items'}
+              </p>
+            )}
           </div>
           <button
             onClick={() => { onClose(); setCheckoutStep('cart'); }}
-            className="p-2 rounded-xl hover:bg-muted transition-all duration-150"
+            className="p-2 transition-all duration-150 hover:opacity-60"
           >
-            <Icon name="XMarkIcon" size={18} className="text-muted-foreground" />
+            <Icon name="XMarkIcon" size={16} className="text-muted-foreground" />
           </button>
         </div>
 
@@ -80,78 +84,80 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
           {checkoutStep === 'cart' && (
             <>
               {cart.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full gap-5 px-8 text-center">
+                <div className="flex flex-col items-center justify-center h-full gap-6 px-8 text-center">
                   <div
-                    className="w-20 h-20 rounded-3xl flex items-center justify-center"
+                    className="w-16 h-16 flex items-center justify-center"
                     style={{ background: 'var(--muted)' }}
                   >
-                    <Icon name="ShoppingCartIcon" size={36} className="text-muted-foreground" />
+                    <Icon name="ShoppingBagIcon" size={24} className="text-muted-foreground" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-2" style={{ color: 'var(--foreground)' }}>
-                      Your cart is empty
+                    <h3 className="font-display text-2xl mb-2" style={{ color: 'var(--foreground)', fontStyle: 'italic', fontWeight: 300 }}>
+                      Your bag is empty
                     </h3>
-                    <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
-                      Browse our catalog and add products you love — for free.
+                    <p className="text-xs" style={{ color: 'var(--muted-foreground)', fontWeight: 300 }}>
+                      Discover our latest collection and add pieces you love.
                     </p>
                   </div>
-                  <button onClick={onClose} className="btn-accent text-sm">
+                  <button onClick={onClose} className="btn-primary text-xs">
                     Continue Shopping
                   </button>
                 </div>
               ) : (
-                <div className="p-4 flex flex-col gap-3">
+                <div className="p-6 flex flex-col gap-0 divide-y" style={{ borderColor: 'var(--border)' }}>
                   {cart.map((item) => (
                     <div
                       key={`cart-item-${item.product.id}`}
-                      className="flex gap-3 p-3 rounded-2xl transition-all duration-150"
-                      style={{ background: 'var(--muted)' }}
+                      className="flex gap-4 py-5"
                     >
-                      <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0" style={{ background: 'var(--border)' }}>
+                      <div
+                        className="w-20 h-24 overflow-hidden flex-shrink-0"
+                        style={{ background: 'var(--muted)' }}
+                      >
                         <AppImage
                           src={item.product.image}
                           alt={`${item.product.title} — cart item`}
-                          width={64}
-                          height={64}
+                          width={80}
+                          height={96}
                           className="w-full h-full object-cover"
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-medium truncate" style={{ color: 'var(--muted-foreground)' }}>
+                        <p className="tracking-editorial mb-0.5" style={{ color: 'var(--muted-foreground)', fontSize: '0.55rem' }}>
                           {item.product.brand}
                         </p>
-                        <p className="text-sm font-semibold truncate mb-2" style={{ color: 'var(--foreground)' }}>
+                        <p className="text-sm font-light mb-3" style={{ color: 'var(--foreground)' }}>
                           {item.product.title}
                         </p>
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-1">
+                          <div className="flex items-center gap-2">
                             <button
                               onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                              className="w-6 h-6 rounded-lg flex items-center justify-center transition-all duration-150 hover:bg-border"
-                              style={{ background: 'var(--card)' }}
+                              className="w-6 h-6 flex items-center justify-center transition-all duration-150 hover:opacity-60"
+                              style={{ border: '1px solid var(--border)' }}
                             >
-                              <Icon name="MinusIcon" size={12} className="text-muted-foreground" />
+                              <Icon name="MinusIcon" size={10} className="text-muted-foreground" />
                             </button>
-                            <span className="text-sm font-bold w-6 text-center font-mono-nums" style={{ color: 'var(--foreground)' }}>
+                            <span className="text-xs font-medium w-5 text-center font-mono-nums" style={{ color: 'var(--foreground)' }}>
                               {item.quantity}
                             </span>
                             <button
                               onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                              className="w-6 h-6 rounded-lg flex items-center justify-center transition-all duration-150 hover:bg-border"
-                              style={{ background: 'var(--card)' }}
+                              className="w-6 h-6 flex items-center justify-center transition-all duration-150 hover:opacity-60"
+                              style={{ border: '1px solid var(--border)' }}
                             >
-                              <Icon name="PlusIcon" size={12} className="text-muted-foreground" />
+                              <Icon name="PlusIcon" size={10} className="text-muted-foreground" />
                             </button>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-bold price-tag" style={{ color: 'var(--foreground)' }}>
+                          <div className="flex items-center gap-3">
+                            <span className="text-sm price-tag" style={{ color: 'var(--foreground)' }}>
                               ${(item.product.price * item.quantity).toFixed(2)}
                             </span>
                             <button
                               onClick={() => removeFromCart(item.product.id)}
-                              className="p-1 rounded-lg transition-all duration-150 hover:bg-danger/10"
+                              className="transition-all duration-150 hover:opacity-60"
                             >
-                              <Icon name="TrashIcon" size={13} style={{ color: 'var(--danger)' } as React.CSSProperties} />
+                              <Icon name="TrashIcon" size={12} className="text-muted-foreground" />
                             </button>
                           </div>
                         </div>
@@ -170,25 +176,25 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
           {checkoutStep === 'placing' && (
             <div className="flex flex-col items-center justify-center h-full gap-6 px-8 text-center">
               <div
-                className="w-20 h-20 rounded-full flex items-center justify-center pulse-soft"
-                style={{ background: 'rgba(232,168,124,0.15)' }}
+                className="w-16 h-16 flex items-center justify-center pulse-soft"
+                style={{ background: 'var(--muted)' }}
               >
-                <Icon name="ShoppingBagIcon" size={36} style={{ color: 'var(--accent)' } as React.CSSProperties} />
+                <Icon name="ShoppingBagIcon" size={24} className="text-muted-foreground" />
               </div>
               <div>
-                <h3 className="font-bold text-xl mb-2" style={{ color: 'var(--foreground)' }}>
-                  Placing your order...
+                <h3 className="font-display text-2xl mb-2" style={{ color: 'var(--foreground)', fontStyle: 'italic', fontWeight: 300 }}>
+                  Processing...
                 </h3>
-                <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
-                  Preparing your fake tracking number ✨
+                <p className="text-xs" style={{ color: 'var(--muted-foreground)', fontWeight: 300 }}>
+                  Preparing your order
                 </p>
               </div>
-              <div className="flex gap-1">
+              <div className="flex gap-1.5">
                 {[0, 1, 2].map((i) => (
                   <div
                     key={`placing-dot-${i}`}
-                    className="w-2 h-2 rounded-full pulse-soft"
-                    style={{ background: 'var(--accent)', animationDelay: `${i * 0.2}s` }}
+                    className="w-1.5 h-1.5 pulse-soft"
+                    style={{ background: 'var(--foreground)', animationDelay: `${i * 0.2}s` }}
                   />
                 ))}
               </div>
@@ -199,31 +205,31 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
         {/* Footer */}
         {cart.length > 0 && checkoutStep !== 'placing' && (
           <div
-            className="p-5 border-t flex-shrink-0"
+            className="p-6 border-t flex-shrink-0"
             style={{ borderColor: 'var(--border)' }}
           >
             {/* Totals */}
-            <div className="flex flex-col gap-2 mb-4">
-              <div className="flex justify-between text-sm">
-                <span style={{ color: 'var(--muted-foreground)' }}>Subtotal</span>
-                <span className="font-semibold font-mono-nums" style={{ color: 'var(--foreground)' }}>${subtotal.toFixed(2)}</span>
+            <div className="flex flex-col gap-2 mb-5">
+              <div className="flex justify-between">
+                <span className="text-xs" style={{ color: 'var(--muted-foreground)', fontWeight: 300 }}>Subtotal</span>
+                <span className="text-xs price-tag" style={{ color: 'var(--foreground)' }}>${subtotal.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span style={{ color: 'var(--muted-foreground)' }}>Shipping</span>
-                <span className="font-semibold" style={{ color: shipping === 0 ? 'var(--success)' : 'var(--foreground)' }}>
-                  {shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}
+              <div className="flex justify-between">
+                <span className="text-xs" style={{ color: 'var(--muted-foreground)', fontWeight: 300 }}>Shipping</span>
+                <span className="text-xs" style={{ color: shipping === 0 ? 'var(--success)' : 'var(--foreground)' }}>
+                  {shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}
                 </span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span style={{ color: 'var(--muted-foreground)' }}>Tax (8%)</span>
-                <span className="font-semibold font-mono-nums" style={{ color: 'var(--foreground)' }}>${tax.toFixed(2)}</span>
+              <div className="flex justify-between">
+                <span className="text-xs" style={{ color: 'var(--muted-foreground)', fontWeight: 300 }}>Tax</span>
+                <span className="text-xs price-tag" style={{ color: 'var(--foreground)' }}>${tax.toFixed(2)}</span>
               </div>
               <div
-                className="flex justify-between pt-2 border-t"
+                className="flex justify-between pt-3 border-t"
                 style={{ borderColor: 'var(--border)' }}
               >
-                <span className="font-bold" style={{ color: 'var(--foreground)' }}>Total</span>
-                <span className="font-extrabold text-lg font-mono-nums" style={{ color: 'var(--foreground)' }}>${total.toFixed(2)}</span>
+                <span className="text-sm font-medium" style={{ color: 'var(--foreground)' }}>Total</span>
+                <span className="text-sm font-medium price-tag" style={{ color: 'var(--foreground)' }}>${total.toFixed(2)}</span>
               </div>
             </div>
 
@@ -231,40 +237,33 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
             {checkoutStep === 'cart' ? (
               <button
                 onClick={() => setCheckoutStep('checkout')}
-                className="btn-primary w-full justify-center text-sm py-3.5"
+                className="btn-primary w-full justify-center py-4"
               >
-                <Icon name="LockClosedIcon" size={15} />
                 Proceed to Checkout
               </button>
             ) : (
               <div className="flex flex-col gap-2">
                 <button
                   onClick={handlePlaceOrder}
-                  className="btn-accent w-full justify-center text-sm py-3.5"
+                  className="btn-primary w-full justify-center py-4"
                 >
-                  <Icon name="SparklesIcon" size={15} />
-                  Place Fake Order — Save ${total.toFixed(2)}
+                  Place Order — ${total.toFixed(2)}
                 </button>
                 <button
                   onClick={() => setCheckoutStep('cart')}
-                  className="btn-outline w-full justify-center text-sm py-2.5"
+                  className="btn-outline w-full justify-center py-3"
                 >
-                  Back to Cart
+                  Back to Bag
                 </button>
               </div>
             )}
-
-            <p className="text-center text-xs mt-3" style={{ color: 'var(--muted-foreground)' }}>
-              <Icon name="ShieldCheckIcon" size={11} className="inline mr-1" />
-              No real payment. Your wallet is safe.
-            </p>
           </div>
         )}
       </div>
 
-      {/* Success modal */}
-      {showSuccess && completedOrder && (
+      {completedOrder && (
         <OrderSuccessModal
+          open={showSuccess}
           order={completedOrder}
           onClose={() => { setShowSuccess(false); setCompletedOrder(null); }}
         />
@@ -275,81 +274,68 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
 
 function CheckoutForm() {
   return (
-    <div className="p-5 flex flex-col gap-6">
-      {/* Shipping */}
+    <div className="p-6 flex flex-col gap-6">
       <div>
-        <h4 className="font-bold text-sm mb-4 flex items-center gap-2" style={{ color: 'var(--foreground)' }}>
-          <Icon name="MapPinIcon" size={16} style={{ color: 'var(--accent)' } as React.CSSProperties} />
-          Shipping Address
-        </h4>
+        <p className="tracking-editorial mb-4" style={{ color: 'var(--muted-foreground)', fontSize: '0.65rem' }}>
+          Delivery
+        </p>
         <div className="flex flex-col gap-3">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-medium block mb-1.5" style={{ color: 'var(--muted-foreground)' }}>First Name</label>
-              <input type="text" defaultValue="Sofia" className="input-field py-2 text-sm" />
+              <label className="tracking-editorial block mb-1.5" style={{ color: 'var(--muted-foreground)', fontSize: '0.6rem' }}>First Name</label>
+              <input type="text" className="input-field py-2.5 text-xs" placeholder="Sofia" style={{ borderRadius: '0' }} />
             </div>
             <div>
-              <label className="text-xs font-medium block mb-1.5" style={{ color: 'var(--muted-foreground)' }}>Last Name</label>
-              <input type="text" defaultValue="Marchetti" className="input-field py-2 text-sm" />
+              <label className="tracking-editorial block mb-1.5" style={{ color: 'var(--muted-foreground)', fontSize: '0.6rem' }}>Last Name</label>
+              <input type="text" className="input-field py-2.5 text-xs" placeholder="Marchetti" style={{ borderRadius: '0' }} />
             </div>
           </div>
           <div>
-            <label className="text-xs font-medium block mb-1.5" style={{ color: 'var(--muted-foreground)' }}>Address</label>
-            <input type="text" defaultValue="123 Maple Street, Apt 4B" className="input-field py-2 text-sm" />
+            <label className="tracking-editorial block mb-1.5" style={{ color: 'var(--muted-foreground)', fontSize: '0.6rem' }}>Email</label>
+            <input type="email" className="input-field py-2.5 text-xs" placeholder="sofia@example.com" style={{ borderRadius: '0' }} />
+          </div>
+          <div>
+            <label className="tracking-editorial block mb-1.5" style={{ color: 'var(--muted-foreground)', fontSize: '0.6rem' }}>Address</label>
+            <input type="text" className="input-field py-2.5 text-xs" placeholder="123 Fashion Street" style={{ borderRadius: '0' }} />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-medium block mb-1.5" style={{ color: 'var(--muted-foreground)' }}>City</label>
-              <input type="text" defaultValue="San Francisco" className="input-field py-2 text-sm" />
+              <label className="tracking-editorial block mb-1.5" style={{ color: 'var(--muted-foreground)', fontSize: '0.6rem' }}>City</label>
+              <input type="text" className="input-field py-2.5 text-xs" placeholder="Milan" style={{ borderRadius: '0' }} />
             </div>
             <div>
-              <label className="text-xs font-medium block mb-1.5" style={{ color: 'var(--muted-foreground)' }}>ZIP</label>
-              <input type="text" defaultValue="94105" className="input-field py-2 text-sm" />
+              <label className="tracking-editorial block mb-1.5" style={{ color: 'var(--muted-foreground)', fontSize: '0.6rem' }}>Postal Code</label>
+              <input type="text" className="input-field py-2.5 text-xs" placeholder="20121" style={{ borderRadius: '0' }} />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Payment */}
       <div>
-        <h4 className="font-bold text-sm mb-1 flex items-center gap-2" style={{ color: 'var(--foreground)' }}>
-          <Icon name="CreditCardIcon" size={16} style={{ color: 'var(--accent)' } as React.CSSProperties} />
-          Payment Method
-        </h4>
-        <p className="text-xs mb-4" style={{ color: 'var(--muted-foreground)' }}>
-          This is a simulation. No real payment will be processed.
+        <p className="tracking-editorial mb-4" style={{ color: 'var(--muted-foreground)', fontSize: '0.65rem' }}>
+          Payment
         </p>
         <div className="flex flex-col gap-3">
           <div>
-            <label className="text-xs font-medium block mb-1.5" style={{ color: 'var(--muted-foreground)' }}>Card Number</label>
-            <input type="text" defaultValue="4242 4242 4242 4242" className="input-field py-2 text-sm font-mono-nums" maxLength={19} />
-          </div>
-          <div>
-            <label className="text-xs font-medium block mb-1.5" style={{ color: 'var(--muted-foreground)' }}>Cardholder Name</label>
-            <input type="text" defaultValue="Sofia Marchetti" className="input-field py-2 text-sm" />
+            <label className="tracking-editorial block mb-1.5" style={{ color: 'var(--muted-foreground)', fontSize: '0.6rem' }}>Card Number</label>
+            <input type="text" className="input-field py-2.5 text-xs" placeholder="4242 4242 4242 4242" style={{ borderRadius: '0' }} />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-medium block mb-1.5" style={{ color: 'var(--muted-foreground)' }}>Expiry</label>
-              <input type="text" defaultValue="12/28" className="input-field py-2 text-sm font-mono-nums" maxLength={5} />
+              <label className="tracking-editorial block mb-1.5" style={{ color: 'var(--muted-foreground)', fontSize: '0.6rem' }}>Expiry</label>
+              <input type="text" className="input-field py-2.5 text-xs" placeholder="MM / YY" style={{ borderRadius: '0' }} />
             </div>
             <div>
-              <label className="text-xs font-medium block mb-1.5" style={{ color: 'var(--muted-foreground)' }}>CVV</label>
-              <input type="text" defaultValue="•••" className="input-field py-2 text-sm font-mono-nums" maxLength={4} />
+              <label className="tracking-editorial block mb-1.5" style={{ color: 'var(--muted-foreground)', fontSize: '0.6rem' }}>CVV</label>
+              <input type="text" className="input-field py-2.5 text-xs" placeholder="123" style={{ borderRadius: '0' }} />
             </div>
           </div>
         </div>
       </div>
 
-      <div
-        className="flex items-start gap-3 p-3 rounded-xl"
-        style={{ background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)' }}
-      >
-        <Icon name="ShieldCheckIcon" size={16} style={{ color: 'var(--success)', flexShrink: 0, marginTop: 1 } as React.CSSProperties} />
-        <p className="text-xs leading-relaxed" style={{ color: 'var(--success)' }}>
-          <strong>100% Safe.</strong> This form is purely decorative. No payment gateway is connected. Your card details go nowhere.
-        </p>
-      </div>
+      <p className="text-xs text-center" style={{ color: 'var(--muted-foreground)', fontWeight: 300 }}>
+        This is a simulated checkout. No real payment is processed.
+      </p>
     </div>
   );
 }

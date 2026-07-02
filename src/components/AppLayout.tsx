@@ -3,13 +3,12 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import AppLogo from '@/components/ui/AppLogo';
 import Icon from '@/components/ui/AppIcon';
 import { useTheme } from '@/components/ThemeProvider';
 import { useStore } from '@/lib/store';
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: 'HomeIcon' },
+  { href: '/dashboard', label: 'Home', icon: 'HomeIcon' },
   { href: '/product-catalog', label: 'Shop', icon: 'ShoppingBagIcon' },
   { href: '/dashboard#orders', label: 'Orders', icon: 'ClipboardDocumentListIcon' },
   { href: '/dashboard#analytics', label: 'Analytics', icon: 'ChartBarIcon' },
@@ -38,26 +37,29 @@ export default function AppLayout({ children, cartCount = 0, wishlistCount = 0 }
       <aside
         className={`hidden lg:flex flex-col sidebar-transition flex-shrink-0 border-r`}
         style={{
-          width: sidebarOpen ? '240px' : '68px',
+          width: sidebarOpen ? '220px' : '60px',
           background: 'var(--card)',
           borderColor: 'var(--border)',
         }}
       >
         {/* Logo */}
         <div
-          className="flex items-center gap-3 px-4 py-5 border-b"
+          className="flex items-center justify-center px-4 py-6 border-b"
           style={{ borderColor: 'var(--border)', minHeight: '72px' }}
         >
-          <AppLogo size={36} />
-          {sidebarOpen && (
-            <span className="font-bold text-base tracking-tight" style={{ color: 'var(--foreground)' }}>
-              RetailTherapy
-            </span>
+          {sidebarOpen ? (
+            <Link href="/" className="elan-logo text-xl" style={{ color: 'var(--foreground)' }}>
+              Élan
+            </Link>
+          ) : (
+            <Link href="/" className="elan-logo text-base" style={{ color: 'var(--foreground)' }}>
+              É
+            </Link>
           )}
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 py-4 px-2 flex flex-col gap-1">
+        <nav className="flex-1 py-6 px-3 flex flex-col gap-0.5">
           {navItems.map((item) => {
             const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href));
             return (
@@ -65,27 +67,36 @@ export default function AppLayout({ children, cartCount = 0, wishlistCount = 0 }
                 key={`nav-${item.label}`}
                 href={item.href}
                 title={!sidebarOpen ? item.label : undefined}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150 group relative ${
+                className={`flex items-center gap-3 px-3 py-2.5 transition-all duration-200 group relative ${
                   isActive
-                    ? 'bg-accent/10 text-accent font-semibold' :'text-muted-foreground hover:bg-muted hover:text-foreground'
+                    ? 'text-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 <Icon
                   name={item.icon as Parameters<typeof Icon>[0]['name']}
-                  size={20}
-                  className={isActive ? 'text-accent' : 'text-muted-foreground group-hover:text-foreground'}
+                  size={16}
+                  className={isActive ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground'}
                 />
                 {sidebarOpen && (
-                  <span className="text-sm">{item.label}</span>
+                  <span className="tracking-editorial" style={{ fontSize: '0.65rem' }}>{item.label}</span>
+                )}
+                {isActive && (
+                  <div
+                    className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4"
+                    style={{ background: 'var(--foreground)' }}
+                  />
                 )}
                 {!sidebarOpen && item.label === 'Wishlist' && resolvedWishlistCount > 0 && (
-                  <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-accent" />
-                )}
-                {!sidebarOpen && item.label === 'Orders' && (
-                  <span className="absolute top-1 right-1 w-2 h-2 rounded-full" style={{ background: 'var(--success)' }} />
+                  <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full" style={{ background: 'var(--foreground)' }} />
                 )}
                 {sidebarOpen && item.label === 'Wishlist' && resolvedWishlistCount > 0 && (
-                  <span className="ml-auto badge badge-accent text-xs">{resolvedWishlistCount}</span>
+                  <span
+                    className="ml-auto text-xs font-mono-nums"
+                    style={{ color: 'var(--muted-foreground)', fontSize: '0.6rem' }}
+                  >
+                    {resolvedWishlistCount}
+                  </span>
                 )}
               </Link>
             );
@@ -93,35 +104,34 @@ export default function AppLayout({ children, cartCount = 0, wishlistCount = 0 }
         </nav>
 
         {/* Bottom */}
-        <div className="py-4 px-2 border-t flex flex-col gap-1" style={{ borderColor: 'var(--border)' }}>
+        <div className="py-4 px-3 border-t flex flex-col gap-0.5" style={{ borderColor: 'var(--border)' }}>
           <button
             onClick={toggleTheme}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150 text-muted-foreground hover:bg-muted hover:text-foreground w-full"
+            className="flex items-center gap-3 px-3 py-2.5 transition-all duration-200 text-muted-foreground hover:text-foreground w-full"
             title={!sidebarOpen ? (theme === 'dark' ? 'Light Mode' : 'Dark Mode') : undefined}
           >
-            <Icon name={theme === 'dark' ? 'SunIcon' : 'MoonIcon'} size={20} />
-            {sidebarOpen && <span className="text-sm">{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>}
+            <Icon name={theme === 'dark' ? 'SunIcon' : 'MoonIcon'} size={16} />
+            {sidebarOpen && <span className="tracking-editorial" style={{ fontSize: '0.65rem' }}>{theme === 'dark' ? 'Light' : 'Dark'}</span>}
           </button>
           <Link
             href="/dashboard#settings"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150 text-muted-foreground hover:bg-muted hover:text-foreground"
+            className="flex items-center gap-3 px-3 py-2.5 transition-all duration-200 text-muted-foreground hover:text-foreground"
             title={!sidebarOpen ? 'Settings' : undefined}
           >
-            <Icon name="Cog6ToothIcon" size={20} />
-            {sidebarOpen && <span className="text-sm">Settings</span>}
+            <Icon name="Cog6ToothIcon" size={16} />
+            {sidebarOpen && <span className="tracking-editorial" style={{ fontSize: '0.65rem' }}>Settings</span>}
           </Link>
-          {/* User avatar */}
+          {/* User */}
           <div className="flex items-center gap-3 px-3 py-2.5 mt-1">
             <div
-              className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
-              style={{ background: 'var(--accent)', color: 'var(--accent-foreground)' }}
+              className="w-7 h-7 flex items-center justify-center text-xs font-medium flex-shrink-0"
+              style={{ background: 'var(--muted)', color: 'var(--foreground)', borderRadius: '2px' }}
             >
               S
             </div>
             {sidebarOpen && (
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold truncate" style={{ color: 'var(--foreground)' }}>Sofia Marchetti</p>
-                <p className="text-xs truncate" style={{ color: 'var(--muted-foreground)' }}>sofia@example.com</p>
+                <p className="text-xs font-medium truncate" style={{ color: 'var(--foreground)' }}>Sofia Marchetti</p>
               </div>
             )}
           </div>
@@ -130,18 +140,21 @@ export default function AppLayout({ children, cartCount = 0, wishlistCount = 0 }
         {/* Collapse toggle */}
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="absolute left-0 bottom-24 translate-x-full w-6 h-10 rounded-r-lg border border-l-0 flex items-center justify-center transition-all duration-150 hover:bg-muted"
+          className="absolute bottom-24 w-5 h-8 flex items-center justify-center transition-all duration-150 hover:opacity-60"
           style={{
             background: 'var(--card)',
             borderColor: 'var(--border)',
-            marginLeft: sidebarOpen ? '240px' : '68px',
+            border: '1px solid var(--border)',
+            borderLeft: 'none',
+            marginLeft: sidebarOpen ? '220px' : '60px',
             position: 'fixed',
             zIndex: 10,
+            borderRadius: '0 2px 2px 0',
           }}
         >
           <Icon
             name={sidebarOpen ? 'ChevronLeftIcon' : 'ChevronRightIcon'}
-            size={14}
+            size={12}
             className="text-muted-foreground"
           />
         </button>
@@ -150,7 +163,7 @@ export default function AppLayout({ children, cartCount = 0, wishlistCount = 0 }
       {/* Mobile overlay */}
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          className="fixed inset-0 z-40 bg-black/30 lg:hidden"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
@@ -162,16 +175,15 @@ export default function AppLayout({ children, cartCount = 0, wishlistCount = 0 }
         }`}
         style={{ background: 'var(--card)', borderRight: '1px solid var(--border)' }}
       >
-        <div className="flex items-center justify-between px-4 py-5 border-b" style={{ borderColor: 'var(--border)' }}>
-          <div className="flex items-center gap-2">
-            <AppLogo size={32} />
-            <span className="font-bold text-base" style={{ color: 'var(--foreground)' }}>RetailTherapy</span>
-          </div>
+        <div className="flex items-center justify-between px-6 py-5 border-b" style={{ borderColor: 'var(--border)' }}>
+          <Link href="/" className="elan-logo text-xl" style={{ color: 'var(--foreground)' }}>
+            Élan
+          </Link>
           <button onClick={() => setMobileMenuOpen(false)}>
-            <Icon name="XMarkIcon" size={20} className="text-muted-foreground" />
+            <Icon name="XMarkIcon" size={18} className="text-muted-foreground" />
           </button>
         </div>
-        <nav className="flex-1 py-4 px-2 flex flex-col gap-1">
+        <nav className="flex-1 py-6 px-3 flex flex-col gap-0.5">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -179,12 +191,18 @@ export default function AppLayout({ children, cartCount = 0, wishlistCount = 0 }
                 key={`mobile-nav-${item.label}`}
                 href={item.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-150 ${
-                  isActive ? 'bg-accent/10 text-accent font-semibold' : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                className={`flex items-center gap-3 px-3 py-3 transition-all duration-200 relative ${
+                  isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                <Icon name={item.icon as Parameters<typeof Icon>[0]['name']} size={20} />
-                <span className="text-sm">{item.label}</span>
+                {isActive && (
+                  <div
+                    className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4"
+                    style={{ background: 'var(--foreground)' }}
+                  />
+                )}
+                <Icon name={item.icon as Parameters<typeof Icon>[0]['name']} size={16} />
+                <span className="tracking-editorial" style={{ fontSize: '0.65rem' }}>{item.label}</span>
               </Link>
             );
           })}
@@ -202,37 +220,44 @@ export default function AppLayout({ children, cartCount = 0, wishlistCount = 0 }
             className="lg:hidden"
             onClick={() => setMobileMenuOpen(true)}
           >
-            <Icon name="Bars3Icon" size={22} className="text-muted-foreground" />
+            <Icon name="Bars3Icon" size={18} className="text-muted-foreground" />
           </button>
 
+          {/* Brand on mobile */}
+          <div className="lg:hidden">
+            <Link href="/" className="elan-logo text-lg" style={{ color: 'var(--foreground)' }}>
+              Élan
+            </Link>
+          </div>
+
           {/* Search */}
-          <div className="flex-1 max-w-md">
+          <div className="flex-1 max-w-sm hidden md:block">
             <div className="relative">
               <Icon
                 name="MagnifyingGlassIcon"
-                size={16}
+                size={14}
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
               />
               <input
                 type="text"
-                placeholder="Search products..."
-                className="input-field pl-9 py-2 text-sm"
-                style={{ background: 'var(--muted)' }}
+                placeholder="Search collections..."
+                className="input-field pl-9 py-2 text-xs"
+                style={{ background: 'var(--muted)', borderRadius: '2px' }}
               />
             </div>
           </div>
 
-          <div className="flex items-center gap-2 ml-auto">
+          <div className="flex items-center gap-3 ml-auto">
             {/* Wishlist */}
             <Link
               href="/wishlist"
-              className="relative p-2 rounded-xl transition-all duration-150 hover:bg-muted"
+              className="relative p-2 transition-all duration-200 hover:opacity-60"
             >
-              <Icon name="HeartIcon" size={20} className="text-muted-foreground" />
+              <Icon name="HeartIcon" size={18} className="text-muted-foreground" />
               {resolvedWishlistCount > 0 && (
                 <span
-                  className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full text-xs font-bold flex items-center justify-center"
-                  style={{ background: '#e85d75', color: '#fff' }}
+                  className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 text-xs font-bold flex items-center justify-center"
+                  style={{ background: 'var(--foreground)', color: 'var(--background)', borderRadius: '2px', fontSize: '0.5rem' }}
                 >
                   {resolvedWishlistCount > 9 ? '9+' : resolvedWishlistCount}
                 </span>
@@ -242,35 +267,18 @@ export default function AppLayout({ children, cartCount = 0, wishlistCount = 0 }
             {/* Cart */}
             <Link
               href="/product-catalog"
-              className="relative p-2 rounded-xl transition-all duration-150 hover:bg-muted"
+              className="relative p-2 transition-all duration-200 hover:opacity-60"
             >
-              <Icon name="ShoppingCartIcon" size={20} className="text-muted-foreground" />
+              <Icon name="ShoppingCartIcon" size={18} className="text-muted-foreground" />
               {resolvedCartCount > 0 && (
                 <span
-                  className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full text-xs font-bold flex items-center justify-center"
-                  style={{ background: 'var(--accent)', color: 'var(--accent-foreground)' }}
+                  className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 text-xs font-bold flex items-center justify-center"
+                  style={{ background: 'var(--foreground)', color: 'var(--background)', borderRadius: '2px', fontSize: '0.5rem' }}
                 >
-                  {resolvedCartCount}
+                  {resolvedCartCount > 9 ? '9+' : resolvedCartCount}
                 </span>
               )}
             </Link>
-
-            {/* Notifications */}
-            <button className="relative p-2 rounded-xl transition-all duration-150 hover:bg-muted">
-              <Icon name="BellIcon" size={20} className="text-muted-foreground" />
-              <span
-                className="absolute top-1 right-1 w-2 h-2 rounded-full"
-                style={{ background: 'var(--accent)' }}
-              />
-            </button>
-
-            {/* Avatar */}
-            <div
-              className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold cursor-pointer"
-              style={{ background: 'var(--accent)', color: 'var(--accent-foreground)' }}
-            >
-              S
-            </div>
           </div>
         </header>
 
