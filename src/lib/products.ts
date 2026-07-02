@@ -62,7 +62,7 @@ export const PRODUCTS: Product[] = [
   badge: 'Bestseller'
 },
 {
-  id: 'w-dr-004', sku: 'AUR-W-DR-004', title: 'Structured Ponte Sheath Dress', brand: 'AUREN', category: 'Dresses', gender: 'Women', price: 225, rating: 4.5, reviewCount: 203, image: "https://img.rocket.new/generatedImages/rocket_gen_img_15988da66-1782960707043.png", description: 'Tailored sheath dress in stretch ponte fabric. Knee-length, back vent, invisible zip.',
+  id: 'w-dr-004', sku: 'AUR-W-DR-004', title: 'Structured Ponte Sheath Dress', brand: 'AUREN', category: 'Dresses', gender: 'Women', price: 225, rating: 4.5, reviewCount: 203, image: "https://img.rocket.new/generatedImages/rocket_gen_img_1adacd0cc-1782962549609.png", description: 'Tailored sheath dress in stretch ponte fabric. Knee-length, back vent, invisible zip.',
   tags: ['sheath', 'ponte', 'workwear', 'tailored'],
   sizes: ['XS', 'S', 'M', 'L', 'XL'],
   colors: ['Charcoal', 'Navy', 'Cream'],
@@ -1482,7 +1482,7 @@ export const PRODUCTS: Product[] = [
   price: 45,
   rating: 4.5,
   reviewCount: 156,
-  image: "https://img.rocket.new/generatedImages/rocket_gen_img_174a30743-1782960707732.png",
+  image: "https://img.rocket.new/generatedImages/rocket_gen_img_122eadf33-1782962550514.png",
   description: '100% silk pocket square. Hand-rolled edges. Classic paisley and solid options.',
   tags: ['pocket square', 'silk', 'formal', 'classic'],
   sizes: ['One Size'],
